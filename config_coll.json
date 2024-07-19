@@ -1,0 +1,11 @@
+{
+  "testConnection": "no",
+  "sourceCPE": "http://0.0.0.0:0/wsi/FNCEWS40MTOM/",
+  "sourceCPEObjectStore": "Storage",
+  "sourceCPEUsername": "ToolAdmin",
+  "sourceCPEPassword": "@$$w0rd",
+  "jaasStanzaName": "FileNetP8WSI",
+  "documentClass": "Document",
+  "query": "SELECT * FROM [document_class] WHERE [some] IN ('K18STEPR00')",
+  "path": "S:/JavaProjects/Utils/SdiDownloader/"
+}

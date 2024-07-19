@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>r2u.tools</groupId>
+    <artifactId>SdiDownloader</artifactId>
+    <version>1.0</version>
+
+    <properties>
+        <maven.compiler.source>7</maven.compiler.source>
+        <maven.compiler.target>7</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <start-class>r2u.tools.Main</start-class>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.ibm.filenet.cpe</groupId>
+            <artifactId>navigatorAPI</artifactId>
+            <version>icn203.601.003</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ibm.filenet.cpe</groupId>
+            <artifactId>Jace</artifactId>
+            <version>5.2.1.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ibm.filenet.cpe</groupId>
+            <artifactId>javaapi</artifactId>
+            <version>5.2.1.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ibm.filenet.cpe</groupId>
+            <artifactId>stax-api</artifactId>
+            <version>5.2.1.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ibm.filenet.cpe</groupId>
+            <artifactId>xlxpScanner</artifactId>
+            <version>5.2.1.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ibm.filenet.cpe</groupId>
+            <artifactId>xlxpScannerUtils</artifactId>
+            <version>5.2.1.5</version>
+        </dependency>
+        <!--suppress VulnerableLibrariesLocal-->
+        <!--X JDK 1.7u80-->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20210307</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+        </dependency>
+        <!--suppress VulnerableLibrariesLocal-->
+        <!--X JDK 1.7u80-->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.5</version>
+        </dependency>
+        <!--suppress VulnerableLibrariesLocal -->
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+    </dependencies>
+
+</project>
