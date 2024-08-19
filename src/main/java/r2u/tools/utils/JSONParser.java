@@ -6,13 +6,13 @@ import org.json.JSONObject;
 import r2u.tools.config.Configurator;
 import r2u.tools.conn.FNConnector;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 
 public class JSONParser {
     private final static Logger logger = Logger.getLogger(JSONParser.class.getName());
@@ -26,12 +26,58 @@ public class JSONParser {
                 sourceCPEUsername = jsonObject.getString("sourceCPEUsername"),
                 sourceCPEPassword = jsonObject.getString("sourceCPEPassword"),
                 jaasStanzaName = jsonObject.getString("jaasStanzaName"),
-                documentClass = jsonObject.getString("documentClass"),
                 query = jsonObject.getString("query"),
-                path = jsonObject.getString("path");
+                path = jsonObject.getString("path"),
+                export = jsonObject.getString("export"),
+                importVar = jsonObject.getString("import"),
+                csvSeparator = jsonObject.getString("csvSeparator"),
+                fileImport = jsonObject.getString("fileImport");
 
-        ArrayList<String> documentList = Converters.stringToArrayListConverter(documentClass);
+        checkVariables(sourceCPE, sourceCPEObjectStore, sourceCPEUsername, sourceCPEPassword, jaasStanzaName,
+                query, path, export, importVar, csvSeparator, fileImport);
 
+        configureData(sourceCPE, sourceCPEObjectStore, sourceCPEUsername, sourceCPEPassword, jaasStanzaName, query, path, export, importVar, csvSeparator, fileImport);
+
+        FNConnector fnConnector = new FNConnector();
+        fnConnector.initWork();
+    }
+
+    private void configureData(String sourceCPE,
+                               String sourceCPEObjectStore,
+                               String sourceCPEUsername,
+                               String sourceCPEPassword,
+                               String jaasStanzaName,
+                               String query,
+                               String path, String export,
+                               String importVar,
+                               String csvSeparator,
+                               String fileImport) {
+        //Imposto i dati nel configuratore
+        Configurator config = Configurator.getInstance();
+        config.setSourceCPE(sourceCPE);
+        config.setURIObjectStore(sourceCPEObjectStore);
+        config.setCPEUsername(sourceCPEUsername);
+        config.setCPEPassword(sourceCPEPassword);
+        config.setJaasStanzaName(jaasStanzaName);
+        config.setQuery(query);
+        config.setPath(path);
+        config.setExport(Boolean.parseBoolean(export));
+        config.setImport(Boolean.parseBoolean(importVar));
+        config.setCSVSeparator(csvSeparator);
+        config.setFileImport(new File(fileImport));
+    }
+
+    private void checkVariables(String sourceCPE,
+                                String sourceCPEObjectStore,
+                                String sourceCPEUsername,
+                                String sourceCPEPassword,
+                                String jaasStanzaName,
+                                String query,
+                                String path,
+                                String export,
+                                String importVar,
+                                String csvSeparator,
+                                String fileImport) {
         if (sourceCPE.isEmpty()) {
             logger.error("SourceCPE is empty. Aborting!");
             System.exit(-1);
@@ -52,27 +98,30 @@ public class JSONParser {
             logger.error("jaasStanzaName is empty. Aborting!");
             System.exit(-1);
         }
-        if (documentList.isEmpty()) {
-            logger.error("documentClass is empty. Aborting!");
+        if (query.isEmpty()) {
+            logger.error("query is empty. Aborting!");
             System.exit(-1);
         }
         if (path.isEmpty()) {
             logger.error("path is empty. Aborting!");
             System.exit(-1);
         }
-
-        //Imposto i dati nel configuratore
-        Configurator instance = Configurator.getInstance();
-        instance.setSourceCPE(sourceCPE);
-        instance.setURIObjectStore(sourceCPEObjectStore);
-        instance.setCPEUsername(sourceCPEUsername);
-        instance.setCPEPassword(sourceCPEPassword);
-        instance.setJaasStanzaName(jaasStanzaName);
-        instance.setDocumentClass(documentList);
-        instance.setQuery(query);
-        instance.setPath(path);
-        FNConnector fnConnector = new FNConnector();
-        fnConnector.initWork();
+        if (export.isEmpty()) {
+            logger.error("export is empty. Aborting!");
+            System.exit(-1);
+        }
+        if (importVar.isEmpty()) {
+            logger.error("importVar is empty. Aborting!");
+            System.exit(-1);
+        }
+        if (csvSeparator.isEmpty()) {
+            logger.error("csvSeparator is empty. Aborting!");
+            System.exit(-1);
+        }
+        if (Files.notExists(Paths.get(fileImport))) {
+            logger.error("Unable to find: " + fileImport + " Aborting!");
+            System.exit(-1);
+        }
     }
 
     private static JSONObject getJSON(URL url) throws IOException {

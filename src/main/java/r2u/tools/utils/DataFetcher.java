@@ -1,15 +1,15 @@
 package r2u.tools.utils;
 
-import com.filenet.api.collection.PageIterator;
-import com.filenet.api.collection.StringList;
 import com.filenet.api.core.ObjectStore;
 import com.filenet.api.query.SearchSQL;
 import com.filenet.api.query.SearchScope;
 import org.apache.log4j.Logger;
-import r2u.tools.constants.Constants;
 
 import java.util.Iterator;
 
+/**
+ * Classe atto a definire e implementare le funzioni di ricerca tramite le query su FileNet.
+ */
 public class DataFetcher {
     private final static Logger logger = Logger.getLogger(DataFetcher.class.getName());
 
@@ -28,14 +28,22 @@ public class DataFetcher {
     }
 
     /**
-     * Funzione atto a ricercare su Relazioni SDI (acq_relation) il GUID del figlio, passando il GUID del padre
+     * Funzione atto a ricercare qualcosa su query custom
      *
-     * @param headId      variabile di coda su quale si effettua la ricerca presso la relazione sdi
+     * @param column      colonna di ricerca, se non viene specificata allora si usa `*`
+     * @param table       tabella di ricerca
+     * @param where       criterio di ricerca
+     * @param what        valore di ricerca
      * @param objectStore contiene i dati dell'object store
      * @return restituisce il GUID del padre quando si processa l'allegato
      */
-    public static Iterator<?> fetchTailIdByRelationHeadId(String headId, ObjectStore objectStore) {
-        String querySource = "SELECT [tail_chronicle_id] FROM [acq_relation] WHERE [head_chronicle_id] = " + headId;
+    public static Iterator<?> executeQuery(String what, String column, String table, String where, ObjectStore objectStore) {
+        String querySource;
+        if (!column.isEmpty()) {
+            querySource = "SELECT [" + column + "] FROM [" + table + "] WHERE [" + where + "] = " + what;
+        } else {
+            querySource = "SELECT * FROM [" + table + "] WHERE [" + where + "] = " + what;
+        }
         return fetchDataByQuery(querySource, objectStore);
     }
 }

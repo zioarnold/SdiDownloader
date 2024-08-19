@@ -13,16 +13,15 @@ import r2u.tools.constants.Constants;
 import r2u.tools.downloader.SdiDownloader;
 
 import javax.security.auth.Subject;
-import java.io.IOException;
 
 public class FNConnector {
-    private final Configurator instance = Configurator.getInstance();
+    private final Configurator config = Configurator.getInstance();
     private final static Logger logger = Logger.getLogger(FNConnector.class.getName());
 
     public FNConnector() {
     }
 
-    public void initWork() throws Exception {
+    public void initWork() {
         SdiDownloader sdiDownloader = new SdiDownloader();
         ObjectStore objectStore = null;
         int indexAttempt = 1, maxAttempts = 5;
@@ -40,7 +39,7 @@ public class FNConnector {
             indexAttempt++;
         }
         if (objectStore != null) {
-            instance.setObjectStore(objectStore);
+            config.setObjectStore(objectStore);
             long startTime, endTime;
             logger.info("Starting SDI Downloader...");
             startTime = System.currentTimeMillis();
@@ -49,7 +48,7 @@ public class FNConnector {
             logger.info("SDI Downloader terminated within: " + DurationFormatUtils.formatDuration(endTime - startTime, Constants.dateTimeFormat, true));
             UserContext.get().popSubject();
         } else {
-            logger.error("AFTER " + indexAttempt + " ATTEMPTS TO ESTABLISH THE CONNECTION TO: " + instance.getSourceCPE() + " PROGRAM IS ABORTED!");
+            logger.error("AFTER " + indexAttempt + " ATTEMPTS TO ESTABLISH THE CONNECTION TO: " + config.getSourceCPE() + " PROGRAM IS ABORTED!");
             System.exit(-1);
         }
     }
@@ -63,23 +62,23 @@ public class FNConnector {
     private ObjectStore objectStoreSetUp(int indexAttempt) {
         Domain sourceDomain;
         Connection sourceConnection;
-        logger.info("Trying to establish connection to: " + instance.getSourceCPE() + "; Attempt number: " + indexAttempt);
+        logger.info("Trying to establish connection to: " + config.getSourceCPE() + "; Attempt number: " + indexAttempt);
         try {
-            sourceConnection = Factory.Connection.getConnection(instance.getSourceCPE());
-            Subject subject = UserContext.createSubject(Factory.Connection.getConnection(instance.getSourceCPE()),
-                    instance.getCPEUsername(), instance.getCPEPassword(), instance.getJaasStanzaName());
+            sourceConnection = Factory.Connection.getConnection(config.getSourceCPE());
+            Subject subject = UserContext.createSubject(Factory.Connection.getConnection(config.getSourceCPE()),
+                    config.getCPEUsername(), config.getCPEPassword(), config.getJaasStanzaName());
             UserContext.get().pushSubject(subject);
             sourceDomain = Factory.Domain.fetchInstance(sourceConnection, null, null);
             logger.info("FileNet sourceDomain name: " + sourceDomain.get_Name());
-            ObjectStore objectStore = Factory.ObjectStore.fetchInstance(sourceDomain, instance.getURIObjectStore(), null);
+            ObjectStore objectStore = Factory.ObjectStore.fetchInstance(sourceDomain, config.getURIObjectStore(), null);
             logger.info("Object Store source: " + objectStore.get_DisplayName());
             logger.info("Connected to Source CPE successfully: " + sourceConnection.getURI() + " " + sourceConnection.getConnectionType());
             return objectStore;
         } catch (EngineRuntimeException exception) {
             if (exception.getExceptionCode().getErrorId().equals("FNRCA0031")) {
-                logger.error("CONNECTION TIMEOUT, PLEASE CHECK THE WSDL: " + instance.getSourceCPE(), exception);
+                logger.error("CONNECTION TIMEOUT, PLEASE CHECK THE WSDL: " + config.getSourceCPE(), exception);
             } else {
-                logger.error("UNMANAGED ERROR IS CAUGHT: " + instance.getSourceCPE(), exception);
+                logger.error("UNMANAGED ERROR IS CAUGHT: " + config.getSourceCPE(), exception);
             }
             return null;
         }
