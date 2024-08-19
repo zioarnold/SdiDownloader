@@ -91,11 +91,11 @@ public class SdiDownloader {
                     //Ne ricavo i suoi figli e x ogni figlio:
                     //Creo cartella con: "bo_id del padre/classe_documentale/filename"
                     Iterator<?> childContractsIterator = DataFetcher.executeQuery(
-                            headProperties.getIdValue("ID").toString(),
-                            "tail_chronicle_id",
-                            "acq_relation",
-                            "head_chronicle_id",
-                            config.getObjectStore()
+                            config.getObjectStore() /*object store*/,
+                            "tail_chronicle_id" /*colonna*/,
+                            "acq_relation" /*tabella*/,
+                            "head_chronicle_id" /*colonna di ricerca*/,
+                            headProperties.getIdValue("ID").toString() /*valore di ricerca*/
                     );
                     while (childContractsIterator != null && childContractsIterator.hasNext()) {
                         RepositoryRow childRepositoryRow = (RepositoryRow) childContractsIterator.next();
@@ -180,11 +180,11 @@ public class SdiDownloader {
                                 String s = importFile.get(i).split(config.getCSVSeparator())[1];
                                 //Ricerco il contratto per bo_id nuovo
                                 Iterator<?> mainDocumentIterator = DataFetcher.executeQuery(
-                                        "'" + s + "'",
+                                        config.getObjectStore(),
                                         "",
                                         "acq_contratto",
                                         "bo_id",
-                                        config.getObjectStore()
+                                        "'" + s + "'"
                                 );
                                 while (mainDocumentIterator != null && mainDocumentIterator.hasNext()) {
                                     try {
@@ -195,11 +195,12 @@ public class SdiDownloader {
                                                 properties.getIdValue("ID"),
                                                 null);
                                         //Cerco di recuperare figlio/figli del "acq_contratto"
-                                        Iterator<?> childDocumentIterator = DataFetcher.executeQuery(mainDocument.getProperties().getIdValue("ID").toString(),
+                                        Iterator<?> childDocumentIterator = DataFetcher.executeQuery(
+                                                config.getObjectStore(),
                                                 "tail_chronicle_id",
                                                 "acq_relation",
                                                 "head_chronicle_id",
-                                                config.getObjectStore());
+                                                mainDocument.getProperties().getIdValue("ID").toString());
                                         if (childDocumentIterator != null && childDocumentIterator.hasNext()) {
                                             //Se ci sono allora allego i file fisici al figlio/figli
                                             while (childDocumentIterator.hasNext()) {

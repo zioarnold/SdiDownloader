@@ -37,7 +37,7 @@ public class DataFetcher {
      * @param objectStore contiene i dati dell'object store
      * @return restituisce il GUID del padre quando si processa l'allegato
      */
-    public static Iterator<?> executeQuery(String what, String column, String table, String where, ObjectStore objectStore) {
+    public static Iterator<?> executeQuery(ObjectStore objectStore, String column, String table, String where, String what) {
         String querySource;
         if (!column.isEmpty()) {
             querySource = "SELECT [" + column + "] FROM [" + table + "] WHERE [" + where + "] = " + what;
