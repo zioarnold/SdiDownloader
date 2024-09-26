@@ -21,6 +21,8 @@ public class Configurator {
     private boolean anImport;
     private String CSVSeparator;
     private File fileImport;
+    private String regex;
+    private boolean cleanup;
 
     private Configurator() {
 
@@ -127,5 +129,21 @@ public class Configurator {
 
     public File getFileImport() {
         return fileImport;
+    }
+
+    public void setRegex(String regex) {
+        this.regex = regex;
+    }
+
+    public String getRegex() {
+        return regex;
+    }
+
+    public void setCleanup(boolean cleanup) {
+        this.cleanup = cleanup;
+    }
+
+    public boolean isCleanup() {
+        return cleanup;
     }
 }

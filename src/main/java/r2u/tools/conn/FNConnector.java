@@ -13,6 +13,7 @@ import r2u.tools.constants.Constants;
 import r2u.tools.downloader.SdiDownloader;
 
 import javax.security.auth.Subject;
+import java.io.IOException;
 
 public class FNConnector {
     private final Configurator config = Configurator.getInstance();
@@ -21,7 +22,7 @@ public class FNConnector {
     public FNConnector() {
     }
 
-    public void initWork() {
+    public void initWork() throws IOException {
         SdiDownloader sdiDownloader = new SdiDownloader();
         ObjectStore objectStore = null;
         int indexAttempt = 1, maxAttempts = 5;

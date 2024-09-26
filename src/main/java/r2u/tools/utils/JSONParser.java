@@ -31,12 +31,14 @@ public class JSONParser {
                 export = jsonObject.getString("export"),
                 importVar = jsonObject.getString("import"),
                 csvSeparator = jsonObject.getString("csvSeparator"),
-                fileImport = jsonObject.getString("fileImport");
+                fileImport = jsonObject.getString("fileImport"),
+                regex = jsonObject.getString("regex"),
+                cleanup = jsonObject.getString("cleanup");
 
         checkVariables(sourceCPE, sourceCPEObjectStore, sourceCPEUsername, sourceCPEPassword, jaasStanzaName,
-                query, path, export, importVar, csvSeparator, fileImport);
+                query, path, export, importVar, csvSeparator, fileImport, regex, cleanup);
 
-        configureData(sourceCPE, sourceCPEObjectStore, sourceCPEUsername, sourceCPEPassword, jaasStanzaName, query, path, export, importVar, csvSeparator, fileImport);
+        configureData(sourceCPE, sourceCPEObjectStore, sourceCPEUsername, sourceCPEPassword, jaasStanzaName, query, path, export, importVar, csvSeparator, fileImport, regex, cleanup);
 
         FNConnector fnConnector = new FNConnector();
         fnConnector.initWork();
@@ -51,7 +53,8 @@ public class JSONParser {
                                String path, String export,
                                String importVar,
                                String csvSeparator,
-                               String fileImport) {
+                               String fileImport,
+                               String regex, String cleanup) {
         //Imposto i dati nel configuratore
         Configurator config = Configurator.getInstance();
         config.setSourceCPE(sourceCPE);
@@ -65,6 +68,8 @@ public class JSONParser {
         config.setImport(Boolean.parseBoolean(importVar));
         config.setCSVSeparator(csvSeparator);
         config.setFileImport(new File(fileImport));
+        config.setRegex(regex);
+        config.setCleanup(Boolean.parseBoolean(cleanup));
     }
 
     private void checkVariables(String sourceCPE,
@@ -77,7 +82,9 @@ public class JSONParser {
                                 String export,
                                 String importVar,
                                 String csvSeparator,
-                                String fileImport) {
+                                String fileImport,
+                                String regex,
+                                String cleanup) {
         if (sourceCPE.isEmpty()) {
             logger.error("SourceCPE is empty. Aborting!");
             System.exit(-1);
@@ -120,6 +127,14 @@ public class JSONParser {
         }
         if (Files.notExists(Paths.get(fileImport))) {
             logger.error("Unable to find: " + fileImport + " Aborting!");
+            System.exit(-1);
+        }
+        if (regex.isEmpty()) {
+            logger.error("Regex is empty. Aborting!");
+            System.exit(-1);
+        }
+        if (cleanup.isEmpty()) {
+            logger.error("Cleanup is empty. Aborting!");
             System.exit(-1);
         }
     }
