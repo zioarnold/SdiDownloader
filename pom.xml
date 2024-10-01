@@ -6,7 +6,7 @@
 
     <groupId>r2u.tools</groupId>
     <artifactId>SdiDownloader</artifactId>
-    <version>1.3.1</version>
+    <version>1.4</version>
 
     <properties>
         <maven.compiler.source>7</maven.compiler.source>
