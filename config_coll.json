@@ -9,7 +9,5 @@
   "fileImport": "S:/JavaProjects/Utils/SdiDownloader/inputfile.csv",
   "path": "S:/JavaProjects/Utils/SdiDownloader/"
   "export": "false",
-  "import": "true",
-  "cleanup": "true",
   "csvSeparator": ","
 }
