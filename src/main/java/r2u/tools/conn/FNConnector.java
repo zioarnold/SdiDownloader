@@ -10,10 +10,10 @@ import org.apache.commons.lang.time.DurationFormatUtils;
 import org.apache.log4j.Logger;
 import r2u.tools.config.Configurator;
 import r2u.tools.constants.Constants;
-import r2u.tools.downloader.SdiDownloader;
+import r2u.tools.downloader.ExportDocuments;
+import r2u.tools.downloader.MigratorDocuments;
 
 import javax.security.auth.Subject;
-import java.io.IOException;
 
 public class FNConnector {
     private final Configurator config = Configurator.getInstance();
@@ -22,8 +22,9 @@ public class FNConnector {
     public FNConnector() {
     }
 
-    public void initWork() throws IOException {
-        SdiDownloader sdiDownloader = new SdiDownloader();
+    public void initWork() {
+        MigratorDocuments migratorDocuments = new MigratorDocuments();
+        ExportDocuments exportDocuments = new ExportDocuments();
         ObjectStore objectStore = null;
         int indexAttempt = 1, maxAttempts = 5;
         while (objectStore == null) {
@@ -44,7 +45,12 @@ public class FNConnector {
             long startTime, endTime;
             logger.info("Starting SDI Downloader...");
             startTime = System.currentTimeMillis();
-            sdiDownloader.startDownload();
+            if (config.isExport()) {
+                logger.info("Exporting data...");
+                exportDocuments.startExport();
+            } else {
+                migratorDocuments.startDownload();
+            }
             endTime = System.currentTimeMillis();
             logger.info("SDI Downloader terminated within: " + DurationFormatUtils.formatDuration(endTime - startTime, Constants.dateTimeFormat, true));
             UserContext.get().popSubject();

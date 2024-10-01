@@ -17,12 +17,10 @@ public class Configurator {
     private ObjectStore objectStore;
     private String path;
     private String sourceCPEObjectStore;
-    private boolean export;
-    private boolean anImport;
     private String CSVSeparator;
     private File fileImport;
     private String regex;
-    private boolean cleanup;
+    private boolean isExport;
 
     private Configurator() {
 
@@ -99,22 +97,6 @@ public class Configurator {
         return path;
     }
 
-    public void setExport(boolean export) {
-        this.export = export;
-    }
-
-    public boolean isExport() {
-        return export;
-    }
-
-    public void setImport(boolean anImport) {
-        this.anImport = anImport;
-    }
-
-    public boolean isImport() {
-        return anImport;
-    }
-
     public void setCSVSeparator(String csvSeparator) {
         this.CSVSeparator = csvSeparator;
     }
@@ -139,11 +121,11 @@ public class Configurator {
         return regex;
     }
 
-    public void setCleanup(boolean cleanup) {
-        this.cleanup = cleanup;
+    public void isExport(boolean isExport) {
+        this.isExport = isExport;
     }
 
-    public boolean isCleanup() {
-        return cleanup;
+    public boolean isExport() {
+        return isExport;
     }
 }

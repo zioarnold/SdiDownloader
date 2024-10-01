@@ -28,17 +28,15 @@ public class JSONParser {
                 jaasStanzaName = jsonObject.getString("jaasStanzaName"),
                 query = jsonObject.getString("query"),
                 path = jsonObject.getString("path"),
-                export = jsonObject.getString("export"),
-                importVar = jsonObject.getString("import"),
                 csvSeparator = jsonObject.getString("csvSeparator"),
                 fileImport = jsonObject.getString("fileImport"),
                 regex = jsonObject.getString("regex"),
-                cleanup = jsonObject.getString("cleanup");
+                export = jsonObject.getString("export");
 
         checkVariables(sourceCPE, sourceCPEObjectStore, sourceCPEUsername, sourceCPEPassword, jaasStanzaName,
-                query, path, export, importVar, csvSeparator, fileImport, regex, cleanup);
+                query, path, csvSeparator, fileImport, regex, export);
 
-        configureData(sourceCPE, sourceCPEObjectStore, sourceCPEUsername, sourceCPEPassword, jaasStanzaName, query, path, export, importVar, csvSeparator, fileImport, regex, cleanup);
+        configureData(sourceCPE, sourceCPEObjectStore, sourceCPEUsername, sourceCPEPassword, jaasStanzaName, query, path, csvSeparator, fileImport, regex, export);
 
         FNConnector fnConnector = new FNConnector();
         fnConnector.initWork();
@@ -50,11 +48,11 @@ public class JSONParser {
                                String sourceCPEPassword,
                                String jaasStanzaName,
                                String query,
-                               String path, String export,
-                               String importVar,
+                               String path,
                                String csvSeparator,
                                String fileImport,
-                               String regex, String cleanup) {
+                               String regex,
+                               String export) {
         //Imposto i dati nel configuratore
         Configurator config = Configurator.getInstance();
         config.setSourceCPE(sourceCPE);
@@ -64,12 +62,10 @@ public class JSONParser {
         config.setJaasStanzaName(jaasStanzaName);
         config.setQuery(query);
         config.setPath(path);
-        config.setExport(Boolean.parseBoolean(export));
-        config.setImport(Boolean.parseBoolean(importVar));
         config.setCSVSeparator(csvSeparator);
         config.setFileImport(new File(fileImport));
         config.setRegex(regex);
-        config.setCleanup(Boolean.parseBoolean(cleanup));
+        config.isExport(Boolean.parseBoolean(export));
     }
 
     private void checkVariables(String sourceCPE,
@@ -79,12 +75,10 @@ public class JSONParser {
                                 String jaasStanzaName,
                                 String query,
                                 String path,
-                                String export,
-                                String importVar,
                                 String csvSeparator,
                                 String fileImport,
                                 String regex,
-                                String cleanup) {
+                                String export) {
         if (sourceCPE.isEmpty()) {
             logger.error("SourceCPE is empty. Aborting!");
             System.exit(-1);
@@ -113,14 +107,6 @@ public class JSONParser {
             logger.error("path is empty. Aborting!");
             System.exit(-1);
         }
-        if (export.isEmpty()) {
-            logger.error("export is empty. Aborting!");
-            System.exit(-1);
-        }
-        if (importVar.isEmpty()) {
-            logger.error("importVar is empty. Aborting!");
-            System.exit(-1);
-        }
         if (csvSeparator.isEmpty()) {
             logger.error("csvSeparator is empty. Aborting!");
             System.exit(-1);
@@ -133,8 +119,8 @@ public class JSONParser {
             logger.error("Regex is empty. Aborting!");
             System.exit(-1);
         }
-        if (cleanup.isEmpty()) {
-            logger.error("Cleanup is empty. Aborting!");
+        if (export.isEmpty()) {
+            logger.error("Export is empty. Aborting!");
             System.exit(-1);
         }
     }
